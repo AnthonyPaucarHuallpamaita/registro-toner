@@ -28,6 +28,123 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 </script>
 
+  <script type="module">
+  // 1️⃣ Importar Firebase
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import {
+    getFirestore,
+    collection,
+    addDoc,
+    getDocs,
+    updateDoc,
+    deleteDoc,
+    doc
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  // 2️⃣ Configuración (PEGA LA TUYA)
+  const firebaseConfig = {
+   aapiKey: "AIzaSyAE6YrTjBNhMMN-EiaAmx3u1FdMo_DKjts",
+  authDomain: "registro-de-toners.firebaseapp.com",
+  projectId: "registro-de-toners",
+  storageBucket: "registro-de-toners.firebasestorage.app",
+  messagingSenderId: "676666281972",
+  appId: "1:676666281972:web:698aba192c2c6185f933a1",
+  measurementId: "G-LH1Y8DCRF9"
+  };
+
+  // 3️⃣ Inicializar Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // 4️⃣ Referencia a la colección
+  const tonerRef = collection(db, "toner");
+
+  // ===============================
+  // GUARDAR REGISTRO
+  // ===============================
+  formToner.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const estadoInicial = sede.value === "Cusco" ? "Solicitado" : "Pendiente";
+
+    if (editIndex !== null) {
+      const id = registros[editIndex].id;
+      await updateDoc(doc(db, "toner", id), {
+        serie: serie.value,
+        sede: sede.value,
+        area: area.value,
+        tipo: tipo.value,
+        estado: estadoInicial
+      });
+      editIndex = null;
+      btnCancelar.classList.add("hidden");
+    } else {
+      await addDoc(tonerRef, {
+        serie: serie.value,
+        sede: sede.value,
+        area: area.value,
+        tipo: tipo.value,
+        estado: estadoInicial,
+        fecha: new Date().toLocaleString(),
+        fechaEntrega: ""
+      });
+    }
+
+    formToner.reset();
+    cargarDatos();
+  });
+
+  // ===============================
+  // CARGAR DATOS
+  // ===============================
+  async function cargarDatos() {
+    registros = [];
+    const querySnapshot = await getDocs(tonerRef);
+    querySnapshot.forEach((d) => {
+      registros.push({ id: d.id, ...d.data() });
+    });
+    render();
+  }
+
+  // ===============================
+  // ELIMINAR
+  // ===============================
+  window.eliminar = async (i) => {
+    if (confirm("¿Eliminar este registro?")) {
+      await deleteDoc(doc(db, "toner", registros[i].id));
+      cargarDatos();
+    }
+  };
+
+  // ===============================
+  // ENTREGAR
+  // ===============================
+  window.entregar = async (i) => {
+    await updateDoc(doc(db, "toner", registros[i].id), {
+      estado: "Entregado",
+      fechaEntrega: new Date().toLocaleString()
+    });
+    cargarDatos();
+  };
+
+  // ===============================
+  // VOLVER A PENDIENTE
+  // ===============================
+  window.volverPendiente = async (i) => {
+    const nuevoEstado = registros[i].sede === "Cusco" ? "Solicitado" : "Pendiente";
+    await updateDoc(doc(db, "toner", registros[i].id), {
+      estado: nuevoEstado,
+      fechaEntrega: ""
+    });
+    cargarDatos();
+  };
+
+  // ===============================
+  // INICIO
+  // ===============================
+  cargarDatos();
+</script>
+
 <body class="bg-gray-100 p-6">
   <div class="max-w-7xl mx-auto bg-white rounded-2xl shadow p-6">
     <h1 class="text-2xl font-semibold mb-4">Registro de Tóner</h1>
