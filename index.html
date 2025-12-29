@@ -7,21 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-  <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyAE6YrTjBNhMMN-EiaAmx3u1FdMo_DKjts",
-  authDomain: "registro-de-toners.firebaseapp.com",
-  projectId: "registro-de-toners",
-  storageBucket: "registro-de-toners.firebasestorage.app",
-  messagingSenderId: "676666281972",
-  appId: "1:676666281972:web:698aba192c2c6185f933a1",
-  measurementId: "G-LH1Y8DCRF9"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-  </script>
+  
 <body class="bg-gray-100 p-6">
   <div class="max-w-7xl mx-auto bg-white rounded-2xl shadow p-6">
     <h1 class="text-2xl font-semibold mb-4">Registro de Tóner</h1>
@@ -292,6 +278,108 @@ formToner.addEventListener("submit", e => {
 });
 
 filtroSede.addEventListener("change", render);
+</script>
+  <script type="module">
+  // 1. Importaciones necesarias de Firebase
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { 
+    getFirestore, 
+    collection, 
+    addDoc, 
+    onSnapshot, 
+    query, 
+    orderBy, 
+    serverTimestamp,
+    updateDoc,
+    doc,
+    deleteDoc
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  // 2. Tu configuración (la que generaste)
+  const firebaseConfig = {
+    apiKey: "AIzaSyDVM1lf_3iQNVE7VAhRt6QXq918ZueVuuw",
+    authDomain: "tonner-b8bc3.firebaseapp.com",
+    projectId: "tonner-b8bc3",
+    storageBucket: "tonner-b8bc3.firebasestorage.app",
+    messagingSenderId: "88846165558",
+    appId: "1:88846165558:web:fc7e72a2765e8f5f1cda97"
+  };
+
+  // 3. Inicializar Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const colRef = collection(db, "registros_toner");
+
+  // Elementos del DOM
+  const form = document.getElementById("formToner");
+  const tabla = document.getElementById("tablaToner");
+  const tablaEnt = document.getElementById("tablaEntregados");
+
+  // --- LÓGICA DE GUARDADO ---
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    
+    const nuevoRegistro = {
+      serie: document.getElementById("serie").value,
+      sede: document.getElementById("sede").value,
+      area: document.getElementById("area").value,
+      tipo: document.getElementById("tipo").value,
+      estado: "Solicitado",
+      fecha: new Date().toLocaleDateString(),
+      fechaCreado: serverTimestamp() // Para ordenarlos por tiempo real
+    };
+
+    try {
+      await addDoc(colRef, nuevoRegistro);
+      form.reset();
+      alert("¡Guardado en Firebase, mi king!");
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  });
+
+  // --- LÓGICA DE LECTURA EN TIEMPO REAL (onSnapshot) ---
+  // Esto reemplaza tu antiguo render(). Se ejecuta solo cuando hay cambios.
+  onSnapshot(query(colRef, orderBy("fechaCreado", "desc")), (snapshot) => {
+    tabla.innerHTML = "";
+    tablaEnt.innerHTML = "";
+
+    snapshot.docs.forEach(docSnap => {
+      const r = docSnap.data();
+      const id = docSnap.id; // Necesitamos el ID para editar o borrar
+
+      // Aquí aplicamos tus filtros y colores (igual que tu código original)
+      if (r.estado !== "Entregado") {
+        renderFilaPrincipal(r, id);
+      } else {
+        renderFilaEntregados(r, id);
+      }
+    });
+  });
+
+  // Funciones de apoyo para la tabla
+  function renderFilaPrincipal(r, id) {
+    tabla.innerHTML += `
+      <tr>
+        <td class="border px-2">${r.serie}</td>
+        <td class="border px-2">${r.sede}</td>
+        <td class="border px-2">${r.area}</td>
+        <td class="border px-2">${r.tipo}</td>
+        <td class="border px-2">${r.fecha}</td>
+        <td class="border px-2">${r.estado}</td>
+        <td class="border px-2 space-x-1">
+          <button onclick="eliminarRegistro('${id}')" class="bg-red-600 text-white px-2 py-1 text-xs rounded">Eliminar</button>
+        </td>
+      </tr>`;
+  }
+
+  // Hacer funciones disponibles globalmente para los botones onclick
+  window.eliminarRegistro = async (id) => {
+    if(confirm("¿Seguro de eliminar?")) {
+      await deleteDoc(doc(db, "registros_toner", id));
+    }
+  };
+
 </script>
 </body>
 </html>
