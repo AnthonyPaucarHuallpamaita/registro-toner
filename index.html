@@ -1,20 +1,35 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Registro de Tóner</title>
+  <title>Registro de Tóner </title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-  
+
+ 
 <body class="bg-gray-100 p-6">
   <div class="max-w-7xl mx-auto bg-white rounded-2xl shadow p-6">
-    <h1 class="text-2xl font-semibold mb-4">Registro de Tóner</h1>
+   <header class="relative bg-white overflow-hidden rounded-t-2xl">
 
-    <!-- FORMULARIO -->
-    <form id="formToner" class="grid grid-cols-1 md:grid-cols-6 gap-4">
-      <input id="serie" required placeholder="Serie" class="border rounded px-3 py-2" />
+  <!-- CONTENIDO -->
+  <div class="relative z-20 max-w-7xl mx-auto px-6 pt-10 pb-24 text-center">
+    <h1 class="text-3xl font-bold text-blue-900 tracking-wide">
+      Registro de Toners ELSE
+    </h1>
+    <div class="mx-auto mt-3 h-1 w-24 bg-yellow-400 rounded-full"></div>
+    <div class="mx-auto mt-3 h-1 w-24 bg-blue-800 rounded-full"></div>
+  </div>
+
+
+</header>
+
+
+
+
+     
+    <form id="formToner" class="grid grid-cols-1 md:grid-cols-6 gap-4 border-b pb-6">
+      <input id="serie" required placeholder="Serie" class="border rounded px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none" />
       <select id="sede" required class="border rounded px-3 py-2">
         <option value="">Sede</option>
         <option>Cusco</option>
@@ -34,19 +49,17 @@
         <option>Color - Black</option>
       </select>
 
-      <button class="bg-blue-600 text-white rounded px-4 py-2">
+      <button id="btnGuardar" class="bg-blue-600 hover:bg-blue-700 text-white font-bold rounded px-4 py-2 transition">
         Guardar
       </button>
 
-      <button type="button" id="btnCancelar"
-        onclick="cancelarEdicion()"
-        class="bg-gray-400 text-white rounded px-4 py-2 hidden">
+      <button type="button" id="btnCancelar" class="bg-gray-400 text-white rounded px-4 py-2 hidden">
         Cancelar
       </button>
     </form>
 
-    <!-- FILTROS -->
-    <div class="mt-6 flex gap-4">
+    <div class="mt-6 flex flex-wrap gap-4 items-center bg-gray-50 p-4 rounded-lg">
+      <label class="font-medium">Filtrar por Sede:</label>
       <select id="filtroSede" class="border rounded px-3 py-2">
         <option value="">Todas las sedes</option>
         <option>Cusco</option>
@@ -58,328 +71,281 @@
         <option>Quillabamba</option>
       </select>
 
-      <button onclick="toggleEntregados()"
-        class="bg-gray-700 text-white px-4 py-2 rounded">
-        Ver tóner entregados
+      <button id="btnToggleEntregados" class="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded transition ml-auto">
+        Ver / Ocultar Entregados
       </button>
     </div>
 
-    <!-- TABLA PRINCIPAL -->
     <div class="mt-6 overflow-x-auto">
       <table class="w-full border-collapse text-sm">
-        <thead class="bg-gray-200">
-          <tr>
-            <th class="border px-2">Serie</th>
-            <th class="border px-2">Sede</th>
-            <th class="border px-2">Área</th>
-            <th class="border px-2">Tipo</th>
-            <th class="border px-2">Fecha</th>
-            <th class="border px-2">Estado</th>
-            <th class="border px-2">Acciones</th>
+        <thead>
+          <tr class="bg-blue-600 text-white">
+            <th class="border px-2 py-2 text-left">Serie</th>
+            <th class="border px-2 py-2 text-left">Sede</th>
+            <th class="border px-2 py-2 text-left">Área</th>
+            <th class="border px-2 py-2 text-left">Tipo</th>
+            <th class="border px-2 py-2 text-left">Fecha</th>
+            <th class="border px-2 py-2 text-left">Estado</th>
+            <th class="border px-2 py-2 text-center">Acciones</th>
           </tr>
         </thead>
-        <tbody id="tablaToner"></tbody>
+        <tbody id="tablaToner" class="bg-white"></tbody>
       </table>
     </div>
 
-    <!-- ENTREGADOS -->
-    <div id="panelEntregados" class="mt-8 hidden">
-      <h2 class="text-xl font-semibold mb-2">Tóner Entregados</h2>
-      <table class="w-full border-collapse text-sm">
-        <thead class="bg-gray-200">
-          <tr>
-            <th class="border px-2">Serie</th>
-            <th class="border px-2">Sede</th>
-            <th class="border px-2">Área</th>
-            <th class="border px-2">Tipo</th>
-            <th class="border px-2">Fecha Entrega</th>
-            <th class="border px-2">Acción</th>
+    <div id="panelEntregados" class="mt-8 hidden border-t-2 border-dashed pt-6">
+      <h2 class="text-xl font-bold mb-4 text-green-700">Historial de Tóner Entregados</h2>
+      <table class="w-full border-collapse text-sm shadow-lg">
+        <thead>
+          <tr class="bg-green-600 text-white">
+            <th class="border px-2 py-2 text-left">Serie</th>
+            <th class="border px-2 py-2 text-left">Sede</th>
+            <th class="border px-2 py-2 text-left">Área</th>
+            <th class="border px-2 py-2 text-left">Tipo</th>
+            <th class="border px-2 py-2 text-left">Fecha Entrega</th>
+            <th class="border px-2 py-2 text-center">Acción</th>
           </tr>
         </thead>
-        <tbody id="tablaEntregados"></tbody>
+        <tbody id="tablaEntregados" class="bg-green-50"></tbody>
       </table>
     </div>
   </div>
 
-<script>
-let registros = [];
-let editIndex = null;
-
-const tabla = document.getElementById("tablaToner");
-const tablaEnt = document.getElementById("tablaEntregados");
-const btnCancelar = document.getElementById("btnCancelar");
-const filtroSede = document.getElementById("filtroSede");
-
-function colorEstado(e) {
-  if (e === "Solicitado") return "text-blue-600 font-semibold";
-  if (e === "Pendiente") return "text-yellow-600 font-semibold";
-  return "text-green-600 font-semibold";
-}
-
-function colorTipo(t) {
-  if (t.includes("Cyan")) return "text-cyan-600 font-semibold";
-  if (t.includes("Magenta")) return "text-pink-600 font-semibold";
-  if (t.includes("Yellow")) return "text-yellow-600 font-semibold";
-  if (t.includes("Black")) return "text-gray-800 font-semibold";
-  return "";
-}
-
-function toggleEntregados() {
-  document.getElementById("panelEntregados").classList.toggle("hidden");
-}
-
-function render() {
-  tabla.innerHTML = "";
-  tablaEnt.innerHTML = "";
-
-  registros.forEach((r, i) => {
-
-    if (filtroSede.value && r.sede !== filtroSede.value) return;
-
-    if (r.estado !== "Entregado") {
-      tabla.innerHTML += `
-        <tr>
-          <td class="border px-2">${r.serie}</td>
-          <td class="border px-2">${r.sede}</td>
-          <td class="border px-2">${r.area}</td>
-          <td class="border px-2 ${colorTipo(r.tipo)}">${r.tipo}</td>
-          <td class="border px-2">${r.fecha}</td>
-          <td class="border px-2 ${colorEstado(r.estado)}">${r.estado}</td>
-          <td class="border px-2 space-x-1">
-            ${r.sede === "Cusco" && r.estado === "Solicitado"
-              ? `<button onclick="aPendiente(${i})"
-                   class="bg-yellow-500 text-white px-2 py-1 text-xs rounded">
-                   A Pendiente
-                 </button>`
-              : ""
-            }
-            ${r.estado === "Pendiente"
-              ? `<button onclick="entregar(${i})"
-                   class="bg-green-600 text-white px-2 py-1 text-xs rounded">
-                   Entregar
-                 </button>`
-              : ""
-            }
-            <button onclick="editar(${i})"
-              class="bg-blue-500 text-white px-2 py-1 text-xs rounded">
-              Editar
-            </button>
-            <button onclick="eliminar(${i})"
-              class="bg-red-600 text-white px-2 py-1 text-xs rounded">
-              Eliminar
-            </button>
-          </td>
-        </tr>`;
-    } else {
-      tablaEnt.innerHTML += `
-        <tr>
-          <td class="border px-2">${r.serie}</td>
-          <td class="border px-2">${r.sede}</td>
-          <td class="border px-2">${r.area}</td>
-          <td class="border px-2 ${colorTipo(r.tipo)}">${r.tipo}</td>
-          <td class="border px-2">${new Date(r.fechaEntrega).toLocaleString()}</td>
-         <td class="border px-2">
-  ${
-    esIrreversible(r.fechaEntrega)
-    ? `<span class="text-gray-400 text-xs font-semibold">Confirmado</span>`
-    : `<button onclick="volverPendiente(${i})"
-        class="bg-yellow-500 text-white px-2 py-1 text-xs rounded">
-        Volver a Pendiente
-      </button>`
-  }
-</td>
-
-        </tr>`;
-    }
-  });
-}
-
-function esIrreversible(fechaEntrega) {
-  const hoy = new Date();
-  const entrega = new Date(fechaEntrega);
-
-  hoy.setHours(0,0,0,0);
-  entrega.setHours(0,0,0,0);
-
-  return hoy > entrega; // true = ya pasó el día
-}
-
-function aPendiente(i) {
-  registros[i].estado = "Pendiente";
-  render();
-}
-
-function entregar(i) {
-  registros[i].estado = "Entregado";
-  registros[i].fechaEntrega = new Date(); // guardar Date real
-  render();
-}
-
-
-function volverPendiente(i) {
-  registros[i].estado = registros[i].sede === "Cusco" ? "Solicitado" : "Pendiente";
-  registros[i].fechaEntrega = "";
-  render();
-}
-
-function editar(i) {
-  const r = registros[i];
-  serie.value = r.serie;
-  sede.value = r.sede;
-  area.value = r.area;
-  tipo.value = r.tipo;
-  editIndex = i;
-  btnCancelar.classList.remove("hidden");
-}
-
-function eliminar(i) {
-  if (confirm("¿Eliminar este registro?")) {
-    registros.splice(i, 1);
-    render();
-  }
-}
-
-function cancelarEdicion() {
-  editIndex = null;
-  formToner.reset();
-  btnCancelar.classList.add("hidden");
-}
-
-formToner.addEventListener("submit", e => {
-  e.preventDefault();
-
-  const estadoInicial = sede.value === "Cusco" ? "Solicitado" : "Pendiente";
-
-  if (editIndex !== null) {
-    registros[editIndex] = {
-      ...registros[editIndex],
-      serie: serie.value,
-      sede: sede.value,
-      area: area.value,
-      tipo: tipo.value,
-      estado: estadoInicial
-    };
-    editIndex = null;
-    btnCancelar.classList.add("hidden");
-  } else {
-    registros.unshift({
-      serie: serie.value,
-      sede: sede.value,
-      area: area.value,
-      tipo: tipo.value,
-      fecha: new Date().toLocaleString(),
-      estado: estadoInicial,
-      fechaEntrega: ""
-    });
-  }
-
-  formToner.reset();
-  render();
-});
-
-filtroSede.addEventListener("change", render);
-</script>
-  <script type="module">
-  // 1. Importaciones necesarias de Firebase
+<script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { 
-    getFirestore, 
-    collection, 
-    addDoc, 
-    onSnapshot, 
-    query, 
-    orderBy, 
-    serverTimestamp,
-    updateDoc,
-    doc,
-    deleteDoc
+    getFirestore, collection, addDoc, onSnapshot, query, orderBy, 
+    serverTimestamp, updateDoc, doc, deleteDoc 
   } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  // 2. Tu configuración (la que generaste)
-  const firebaseConfig = {
-    apiKey: "AIzaSyDVM1lf_3iQNVE7VAhRt6QXq918ZueVuuw",
-    authDomain: "tonner-b8bc3.firebaseapp.com",
-    projectId: "tonner-b8bc3",
-    storageBucket: "tonner-b8bc3.firebasestorage.app",
-    messagingSenderId: "88846165558",
-    appId: "1:88846165558:web:fc7e72a2765e8f5f1cda97"
+ const firebaseConfig = {
+     apiKey: "AIzaSyAE6YrTjBNhMMN-EiaAmx3u1FdMo_DKjts",
+  authDomain: "registro-de-toners.firebaseapp.com",
+  projectId: "registro-de-toners",
+  storageBucket: "registro-de-toners.firebasestorage.app",
+  messagingSenderId: "676666281972",
+  appId: "1:676666281972:web:698aba192c2c6185f933a1",
+  measurementId: "G-LH1Y8DCRF9"
   };
 
-  // 3. Inicializar Firebase
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
-  const colRef = collection(db, "registros_toner");
+  const colRef = collection(db, "registro-de-toners");
 
-  // Elementos del DOM
-  const form = document.getElementById("formToner");
+  const formToner = document.getElementById("formToner");
   const tabla = document.getElementById("tablaToner");
   const tablaEnt = document.getElementById("tablaEntregados");
+  const btnCancelar = document.getElementById("btnCancelar");
+  const filtroSede = document.getElementById("filtroSede");
+  
+  let editId = null;
+  let datosLocales = []; // Cache para filtrar sin consultar a Firebase cada vez
 
-  // --- LÓGICA DE GUARDADO ---
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    
-    const nuevoRegistro = {
-      serie: document.getElementById("serie").value,
-      sede: document.getElementById("sede").value,
-      area: document.getElementById("area").value,
-      tipo: document.getElementById("tipo").value,
-      estado: "Solicitado",
-      fecha: new Date().toLocaleDateString(),
-      fechaCreado: serverTimestamp() // Para ordenarlos por tiempo real
-    };
+  const colorEstado = (e) => {
+    if (e === "Solicitado") return "text-blue-600 font-bold";
+    if (e === "Pendiente") return "text-orange-500 font-bold";
+    return "text-green-600 font-bold";
+  };
 
-    try {
-      await addDoc(colRef, nuevoRegistro);
-      form.reset();
-      alert("¡Guardado en Firebase, mi king!");
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  });
+  const colorTipo = (t) => {
+    if (t.includes("Cyan")) return "text-cyan-500 font-bold";
+    if (t.includes("Magenta")) return "text-pink-500 font-bold";
+    if (t.includes("Yellow")) return "text-yellow-500 font-bold";
+    if (t.includes("Black")) return "text-gray-900 font-bold";
+    return "font-medium";
+  };
 
-  // --- LÓGICA DE LECTURA EN TIEMPO REAL (onSnapshot) ---
-  // Esto reemplaza tu antiguo render(). Se ejecuta solo cuando hay cambios.
-  onSnapshot(query(colRef, orderBy("fechaCreado", "desc")), (snapshot) => {
+  // --- LÓGICA DE RENDERIZADO Y FILTRO ---
+
+  function renderizarTablas() {
     tabla.innerHTML = "";
     tablaEnt.innerHTML = "";
+    const filtro = filtroSede.value;
 
-    snapshot.docs.forEach(docSnap => {
-      const r = docSnap.data();
-      const id = docSnap.id; // Necesitamos el ID para editar o borrar
+    datosLocales.forEach(r => {
+      // Aplicar filtro de sede
+      if (filtro !== "" && r.sede !== filtro) return;
 
-      // Aquí aplicamos tus filtros y colores (igual que tu código original)
       if (r.estado !== "Entregado") {
-        renderFilaPrincipal(r, id);
+        renderPrincipal(r, r.id);
       } else {
-        renderFilaEntregados(r, id);
+        renderEntregados(r, r.id);
       }
     });
+  }
+
+  // Escuchar cambios en Firebase
+  onSnapshot(query(colRef, orderBy("fechaCreado", "desc")), (snapshot) => {
+    datosLocales = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    renderizarTablas();
   });
 
-  // Funciones de apoyo para la tabla
-  function renderFilaPrincipal(r, id) {
+  // Escuchar cambios en el selector de filtro
+  filtroSede.addEventListener("change", renderizarTablas);
+
+  function renderPrincipal(r, id) {
     tabla.innerHTML += `
-      <tr>
-        <td class="border px-2">${r.serie}</td>
-        <td class="border px-2">${r.sede}</td>
-        <td class="border px-2">${r.area}</td>
-        <td class="border px-2">${r.tipo}</td>
-        <td class="border px-2">${r.fecha}</td>
-        <td class="border px-2">${r.estado}</td>
-        <td class="border px-2 space-x-1">
-          <button onclick="eliminarRegistro('${id}')" class="bg-red-600 text-white px-2 py-1 text-xs rounded">Eliminar</button>
+      <tr class="hover:bg-gray-50 transition">
+        <td class="border px-2 py-2">${r.serie}</td>
+        <td class="border px-2 py-2">${r.sede}</td>
+        <td class="border px-2 py-2">${r.area}</td>
+        <td class="border px-2 py-2 ${colorTipo(r.tipo)}">${r.tipo}</td>
+        <td class="border px-2 py-2 text-xs">${r.fechaActualizada || '---'}</td>
+        <td class="border px-2 py-2 ${colorEstado(r.estado)}">${r.estado}</td>
+        <td class="border px-2 py-2 text-center space-x-1">
+          ${r.sede === "Cusco" && r.estado === "Solicitado" ? 
+            `<button onclick="cambiarEstado('${id}', 'Pendiente')" class="bg-orange-400 text-white px-2 py-1 text-xs rounded shadow">A Pendiente</button>` : ""}
+          ${r.estado === "Pendiente" ? 
+            `<button onclick="entregarToner('${id}')" class="bg-green-600 text-white px-2 py-1 text-xs rounded shadow">Entregar</button>` : ""}
+          <button onclick="prepararEdicion('${id}', '${r.serie}', '${r.sede}', '${r.area}', '${r.tipo}')" class="bg-blue-500 text-white px-2 py-1 text-xs rounded shadow">Editar</button>
+          <button onclick="borrarRegistro('${id}')" class="bg-red-600 text-white px-2 py-1 text-xs rounded shadow">Borrar</button>
         </td>
       </tr>`;
   }
 
-  // Hacer funciones disponibles globalmente para los botones onclick
-  window.eliminarRegistro = async (id) => {
-    if(confirm("¿Seguro de eliminar?")) {
-      await deleteDoc(doc(db, "registros_toner", id));
+  function renderEntregados(r, id) {
+  const fechaE = new Date(r.fechaEntrega).toLocaleString("es-PE");
+
+  let boton = "";
+
+  if (!r.confirmado) {
+    boton = `
+      <button
+        onclick="confirmarEntrega('${id}')"
+        class="bg-green-600 hover:bg-green-700 text-white px-2 py-1 text-xs rounded">
+        Confirmar
+      </button>
+      <button
+        onclick="revertirEntrega('${id}', '${r.sede}')"
+        class="bg-yellow-500 hover:bg-yellow-600 text-white px-2 py-1 text-xs rounded ml-1">
+        Revertir
+      </button>`;
+  } else {
+    boton = `
+      <span class="text-gray-500 font-semibold text-xs">
+        ✔ Confirmado
+      </span>`;
+  }
+
+  tablaEnt.innerHTML += `
+    <tr>
+      <td class="border px-2 py-2">${r.serie}</td>
+      <td class="border px-2 py-2">${r.sede}</td>
+      <td class="border px-2 py-2">${r.area}</td>
+      <td class="border px-2 py-2">${r.tipo}</td>
+      <td class="border px-2 py-2 text-xs">${fechaE}</td>
+      <td class="border px-2 py-2 text-center">
+        ${boton}
+      </td>
+    </tr>`;
+}
+
+window.confirmarEntrega = async (id) => {
+  if (!confirm("¿Confirmar entrega definitiva?")) return;
+
+  await updateDoc(doc(db, "registro-de-toners", id), {
+    confirmado: true,
+    fechaConfirmacion: Date.now()
+  });
+};
+window.revertirEntrega = async (id, sede) => {
+  const ref = doc(db, "registro-de-toners", id);
+  const snap = await getDoc(ref);
+
+  if (snap.data().confirmado) {
+    alert("⛔ La entrega ya fue confirmada");
+    return;
+  }
+
+  const estadoRev = sede === "Cusco" ? "Solicitado" : "Pendiente";
+
+  await updateDoc(ref, {
+    estado: estadoRev,
+    fechaEntrega: "",
+    confirmado: false
+  });
+};
+
+
+
+  // --- ACCIONES FORMULARIO ---
+
+  formToner.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const sedeVal = document.getElementById("sede").value;
+    const estadoInicial = sedeVal === "Cusco" ? "Solicitado" : "Pendiente";
+
+    const datos = {
+      serie: document.getElementById("serie").value,
+      sede: sedeVal,
+      area: document.getElementById("area").value,
+      tipo: document.getElementById("tipo").value,
+      fechaActualizada: new Date().toLocaleString()
+    };
+
+    try {
+      if (editId) {
+        await updateDoc(doc(db, "registro-de-toners", editId), datos);
+        editId = null;
+        btnCancelar.classList.add("hidden");
+        alert("Actualizado correctamente");
+      } else {
+        await addDoc(colRef, {
+          ...datos,
+          estado: estadoInicial,
+          fechaCreado: serverTimestamp(),
+          fechaEntrega: ""
+        });
+      }
+      formToner.reset();
+    } catch (err) { console.error(err); }
+  });
+
+  // --- FUNCIONES GLOBALES ---
+  window.cambiarEstado = async (id, nuevoEstado) => {
+    await updateDoc(doc(db, "registro-de-toners", id), { estado: nuevoEstado });
+  };
+
+  window.entregarToner = async (id) => {
+    await updateDoc(doc(db, "registro-de-toners", id), { 
+      estado: "Entregado", 
+      fechaEntrega: new Date().getTime() 
+    });
+  };
+
+  window.revertirEntrega = async (id, sede) => {
+    const estadoRev = sede === "Cusco" ? "Solicitado" : "Pendiente";
+    await updateDoc(doc(db, "registro-de-toners", id), { 
+      estado: estadoRev, 
+      fechaEntrega: "" 
+    });
+  };
+
+  window.borrarRegistro = async (id) => {
+    if (confirm("¿Mi king, seguro que quieres borrarlo?")) {
+      await deleteDoc(doc(db, "registro-de-toners", id));
     }
   };
 
+  window.prepararEdicion = (id, s, sd, a, t) => {
+    editId = id;
+    document.getElementById("serie").value = s;
+    document.getElementById("sede").value = sd;
+    document.getElementById("area").value = a;
+    document.getElementById("tipo").value = t;
+    btnCancelar.classList.remove("hidden");
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  document.getElementById("btnToggleEntregados").onclick = () => {
+    document.getElementById("panelEntregados").classList.toggle("hidden");
+  };
+
+  btnCancelar.onclick = () => {
+    editId = null;
+    formToner.reset();
+    btnCancelar.classList.add("hidden");
+  };
 </script>
 </body>
 </html>
