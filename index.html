@@ -9,7 +9,34 @@
   <link rel="icon" href="assets/favicon.png" type="image/png">
  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2049/2049678.png" type="image/png">
 </head>
+<!-- BOTÓN STOCK VERTICAL -->
+<button id="btnStock"
+  class="fixed bottom-4 left-2 bg-blue-600 hover:bg-blue-700 text-white
+         px-2 py-4 rounded-xl shadow-lg z-50"
+  style="writing-mode: vertical-rl;">
+  📦 Stock Cusco
+</button>
 
+
+<!-- PANEL STOCK CUSCO -->
+<div id="stockCusco"
+  class="fixed bottom-4 left-20 bg-white shadow-xl rounded-xl p-4 w-64 border
+         hidden z-50 transform translate-x-20 opacity-0
+         transition-all duration-300 ease-in-out">
+
+  <h3 class="font-bold text-blue-700 mb-2 text-sm">
+    📦 Stock Tóner – Cusco
+  </h3>
+
+  <ul class="text-sm space-y-1">
+    <li>🖨️ Blanco y Negro: <b id="stk-bn">0</b></li>
+    <li class="text-cyan-600">🔵 Cyan: <b id="stk-cyan">0</b></li>
+    <li class="text-pink-600">🟣 Magenta: <b id="stk-magenta">0</b></li>
+    <li class="text-yellow-500">🟡 Yellow: <b id="stk-yellow">0</b></li>
+    <li class="text-gray-900">⚫ Black: <b id="stk-black">0</b></li>
+  </ul>
+</div>
+  
  
 <body class="bg-gray-100 p-6">
   <div class="max-w-7xl mx-auto bg-white rounded-2xl shadow p-6">
@@ -362,6 +389,52 @@ window.revertirEntrega = async (id, sede) => {
     formToner.reset();
     btnCancelar.classList.add("hidden");
   };
+
+  //MENU DE STOCK DESPLASANTE
+const btnStock = document.getElementById("btnStock");
+const panelStock = document.getElementById("stockCusco");
+
+function mostrarPanel() {
+  panelStock.classList.remove("hidden");
+
+  // Forzamos repaint para que la animación funcione
+  requestAnimationFrame(() => {
+    panelStock.classList.remove("translate-x-20", "opacity-0");
+    panelStock.classList.add("translate-x-0", "opacity-100");
+  });
+}
+
+function ocultarPanel() {
+  panelStock.classList.add("translate-x-20", "opacity-0");
+  panelStock.classList.remove("translate-x-0", "opacity-100");
+
+  // Esperamos que termine la animación
+  setTimeout(() => {
+    panelStock.classList.add("hidden");
+  }, 300);
+}
+
+btnStock.addEventListener("click", (e) => {
+  e.stopPropagation();
+
+  if (panelStock.classList.contains("hidden")) {
+    mostrarPanel();
+  } else {
+    ocultarPanel();
+  }
+});
+
+// Click fuera → se desliza y desaparece
+document.addEventListener("click", (e) => {
+  if (
+    !panelStock.classList.contains("hidden") &&
+    !panelStock.contains(e.target) &&
+    !btnStock.contains(e.target)
+  ) {
+    ocultarPanel();
+  }
+});
+
 </script>
 </body>
 </html>
