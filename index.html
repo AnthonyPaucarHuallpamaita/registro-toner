@@ -247,10 +247,12 @@ function actualizarStockCusco() {
 }
 
   // Escuchar cambios en Firebase
-  onSnapshot(query(colRef, orderBy("fechaCreado", "desc")), (snapshot) => {
-    datosLocales = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    renderizarTablas();
-  });
+onSnapshot(query(colRef, orderBy("fechaCreado", "desc")), (snapshot) => {
+  datosLocales = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  renderizarTablas();
+  actualizarStockCusco(); 
+});
+;
 
   // Escuchar cambios en el selector de filtro
   filtroSede.addEventListener("change", renderizarTablas);
