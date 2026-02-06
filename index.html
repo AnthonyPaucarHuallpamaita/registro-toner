@@ -216,6 +216,35 @@
       }
     });
   }
+function actualizarStockCusco() {
+  let stock = {
+    bn: 0,
+    cyan: 0,
+    magenta: 0,
+    yellow: 0,
+    black: 0
+  };
+
+  datosLocales.forEach(r => {
+    // SOLO CUSCO
+    if (r.sede !== "Cusco") return;
+
+    // SOLO LO QUE YA LLEGÓ A ALMACÉN
+    if (r.estado !== "Pendiente") return;
+
+    if (r.tipo === "Blanco y Negro") stock.bn++;
+    if (r.tipo.includes("Cyan")) stock.cyan++;
+    if (r.tipo.includes("Magenta")) stock.magenta++;
+    if (r.tipo.includes("Yellow")) stock.yellow++;
+    if (r.tipo.includes("Black")) stock.black++;
+  });
+
+  document.getElementById("stk-bn").textContent = stock.bn;
+  document.getElementById("stk-cyan").textContent = stock.cyan;
+  document.getElementById("stk-magenta").textContent = stock.magenta;
+  document.getElementById("stk-yellow").textContent = stock.yellow;
+  document.getElementById("stk-black").textContent = stock.black;
+}
 
   // Escuchar cambios en Firebase
   onSnapshot(query(colRef, orderBy("fechaCreado", "desc")), (snapshot) => {
