@@ -287,14 +287,33 @@ onSnapshot(query(colRef, orderBy("fechaCreado", "desc")), (snapshot) => {
         <td class="border px-2 py-2 ${colorTipo(r.tipo)}">${r.tipo}</td>
         <td class="border px-2 py-2 text-xs">${r.fechaActualizada || '---'}</td>
         <td class="border px-2 py-2 ${colorEstado(r.estado)}">${r.estado}</td>
-        <td class="border px-2 py-2 text-center space-x-1">
-          ${r.sede === "Cusco" && r.estado === "Solicitado" ? 
-            `<button onclick="cambiarEstado('${id}', 'Pendiente')" class="bg-orange-400 text-white px-2 py-1 text-xs rounded shadow">A Pendiente</button>` : ""}
-          ${r.estado === "Pendiente" ? 
-            `<button onclick="entregarToner('${id}')" class="bg-green-600 text-white px-2 py-1 text-xs rounded shadow">Entregar</button>` : ""}
-          <button onclick="prepararEdicion('${id}', '${r.serie}', '${r.sede}', '${r.area}', '${r.tipo}')" class="bg-blue-500 text-white px-2 py-1 text-xs rounded shadow">Editar</button>
-          <button onclick="borrarRegistro('${id}')" class="bg-red-600 text-white px-2 py-1 text-xs rounded shadow">Borrar</button>
-        </td>
+        <td class="border px-2 py-2 text-center">
+  <div class="flex justify-center gap-2 flex-wrap">
+    
+    ${r.sede === "Cusco" && r.estado === "Solicitado" ?
+      `<button onclick="cambiarEstado('${id}', 'Pendiente')"
+        class="w-24 bg-orange-400 text-white py-1 text-xs rounded shadow">
+        A Pendiente
+      </button>` : ""}
+
+    ${r.estado === "Pendiente" ?
+      `<button onclick="entregarToner('${id}')"
+        class="w-24 bg-green-600 text-white py-1 text-xs rounded shadow">
+        Entregar
+      </button>` : ""}
+
+    <button onclick="prepararEdicion('${id}', '${r.serie}', '${r.sede}', '${r.area}', '${r.tipo}')"
+      class="w-24 bg-blue-500 text-white py-1 text-xs rounded shadow">
+      Editar
+    </button>
+
+    <button onclick="borrarRegistro('${id}')"
+      class="w-24 bg-red-600 text-white py-1 text-xs rounded shadow">
+      Borrar
+    </button>
+
+  </div>
+</td>
       </tr>`;
   }
 
